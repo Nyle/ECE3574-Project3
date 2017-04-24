@@ -2,6 +2,10 @@
 #include <cmath>
 #include "scene.hpp"
 
+Vec3D::Vec3D() {
+    x = y = z = 0;
+}
+
 Vec3D::Vec3D(double x, double y, double z) : x(x), y(y), z(z) {};
 
 const Vec3D Vec3D::operator+(const Vec3D v) const {

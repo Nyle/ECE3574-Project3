@@ -9,6 +9,8 @@ class Plane;
 class Vec3D {
 public:
     double x, y, z;
+    // Default constructor
+    Vec3D();
     // Constructor from values
     Vec3D(double x, double y, double z);
     // Vec3D addition
