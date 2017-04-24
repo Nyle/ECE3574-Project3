@@ -2,6 +2,7 @@
 #define SCENE_HPP
 
 class QJsonObject;
+class QJsonDocument;
 #include <vector>
 #include <string>
 #include "math.hpp"
@@ -80,6 +81,7 @@ public:
     ~Scene();
 };
 
+QJsonDocument strToJsonDocument(std::string str);
 Scene * loadSceneFromFile(std::string filename);
 
 #endif // SCENE_HPP
