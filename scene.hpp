@@ -3,6 +3,7 @@
 
 class QJsonObject;
 #include <vector>
+#include <string>
 #include "math.hpp"
 #include "color.hpp"
 
