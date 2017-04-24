@@ -60,14 +60,16 @@ Color * trace(Scene * s, size_t i, size_t j) {
             ((s->camera.center - r.start) * s->camera.normal) /
             (r.dir * s->camera.normal);
         
-        if (!isShadowed(s, r, closest,
-                             // We only care about ones that are between the
-                             // light and the intersection point, and are also
-                             // on the far side of the camera plane
-                             fmin((intersectionPt - light.location).mag(),
-                                  cameraPlaneIntersectionDist))) {
-            double scale = intersectionNormal * r.dir * closest->lambert;
-            if (scale >= 0) *result += scale * light.intensity * closest->color;
+        double scale = intersectionNormal * r.dir * closest->lambert;
+
+        if (scale >= 0 &&
+            // We only care about ones that are between the
+            // light and the intersection point, and are also
+            // on the far side of the camera plane
+            !isShadowed(s, r, closest,
+                        fmin((intersectionPt - light.location).mag(),
+                             cameraPlaneIntersectionDist))) {
+            *result += scale * light.intensity * closest->color;
         }
     }
 
