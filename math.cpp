@@ -1,7 +1,6 @@
 #include "math.hpp"
 #include <cmath>
 #include <limits>
-#include "scene.hpp"
 
 bool approx(double a, double b) {
     return a - b < std::numeric_limits<double>::epsilon();

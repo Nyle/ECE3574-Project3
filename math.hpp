@@ -3,9 +3,7 @@
 
 #include <cmath>
 
-class Sphere;
-class Plane;
-
+// If the two numbers are approximately equal
 bool approx(double a, double b);
 
 class Vec3D {
