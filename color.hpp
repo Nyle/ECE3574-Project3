@@ -7,22 +7,19 @@ class Color {
 public:
     size_t r, g, b;
 
+    // Default constructor; Black
+    Color() : r(0), g(0), b(0) {}
     // Constructor from values;
     Color(size_t r, size_t g, size_t b) : r(r), g(g), b(b) {}
 
-    const Color operator*(double d) const;
-
+    const Color operator*=(double d);
     const Color operator+=(const Color c);
-
-    const Color operator+(const Color c) const;
 
     size_t max() const;
 };
 
-inline Color operator+(Color lhs, const Color& rhs);
-
-const Color operator*(double d, const Color c);
-
-const Color VOID_COLOR = Color(0, 0, 0);
+Color operator+(Color lhs, const Color& rhs);
+Color operator*(Color lhs, double rhs);
+Color operator*(double lhs, const Color& rhs);
 
 #endif

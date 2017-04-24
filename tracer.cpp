@@ -39,8 +39,8 @@ bool isShadowed(Scene * s, Ray r, SceneObject * exclude, double stopAt) {
     return false;
 }
 
-Color trace(Scene * s, size_t i, size_t j) {
-    Color result = VOID_COLOR;
+Color * trace(Scene * s, size_t i, size_t j) {
+    Color * result = new Color();
     Ray r = Ray(s->camera.focusPoint, pixelPoint(s->camera, i, j));
     double closestDistance;
     SceneObject * closest;
@@ -67,7 +67,7 @@ Color trace(Scene * s, size_t i, size_t j) {
                              fmin((intersectionPt - light.location).mag(),
                                   cameraPlaneIntersectionDist))) {
             double scale = intersectionNormal * r.dir * closest->lambert;
-            if (scale >= 0) result += scale * light.intensity * closest->color;
+            if (scale >= 0) *result += scale * light.intensity * closest->color;
         }
     }
 

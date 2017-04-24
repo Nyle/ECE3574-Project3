@@ -1,7 +1,10 @@
 #include "color.hpp"
 
-const Color Color::operator*(double d) const {
-    return Color(d * r, d * g, d * b);
+const Color Color::operator*=(double d) {
+    r *= d;
+    g *= d;
+    b *= d;
+    return *this;
 }
 
 const Color Color::operator+=(const Color c) {
@@ -16,11 +19,16 @@ size_t Color::max() const {
     return b > tmp ? b : tmp;
 }
 
-inline Color operator+(Color lhs, const Color& rhs) {
+Color operator+(Color lhs, const Color& rhs) {
     lhs += rhs;
     return lhs;
 }
 
-const Color operator*(double d, const Color c) {
-    return c * d;
+Color operator*(Color lhs, double rhs) {
+    lhs *= rhs;
+    return lhs;
+}
+
+Color operator*(double lhs, const Color& rhs) {
+    return rhs * lhs;
 }
