@@ -16,6 +16,8 @@ public:
     const Color operator+=(const Color c);
 
     size_t max() const;
+
+    bool operator==(const Color c);
 };
 
 Color operator+(Color lhs, const Color& rhs);
