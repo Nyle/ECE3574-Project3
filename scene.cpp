@@ -75,7 +75,7 @@ double Sphere::intersect(Ray r) {
     double c = (center - r.start).mag2() - radius * radius;
     double discriminant = b * b - 4 * a * c;
 
-    if (discriminant < 0) return std::numeric_limits<double>::infinity();
+    if (discriminant < 0) { return std::numeric_limits<double>::infinity(); }
 
     double d1 = (-b + sqrt(discriminant)) / (2 * a);
     double d2 = (-b - sqrt(discriminant)) / (2 * a);
@@ -97,7 +97,7 @@ Vec3D Plane::normalAt(Vec3D point) {
 
 double Plane::intersect(Ray r) {
     // Ray and plane are parallel; no intersection
-    if (r.dir * normal == 0) return std::numeric_limits<double>::infinity();
+    if (r.dir * normal == 0) { return std::numeric_limits<double>::infinity(); }
     double res = ((center - r.start) * normal) / (r.dir * normal);
     return res > 0 ? res : std::numeric_limits<double>::infinity();
 }
@@ -155,17 +155,20 @@ Scene::Scene(QJsonObject json) : camera(Camera(json["camera"].toObject())) {
             SceneObject * ptr = new Plane(obj->toObject());
             objects.push_back(ptr);
         } else {
+            for (auto obj : objects) delete obj;
             throw JsonFormatError("Objects must be of type sphere or plane");
         }
     }
 
     // Parse lights
     if (!json["lights"].isArray()) {
+        for (auto obj : objects) delete obj;
         throw JsonFormatError("Expected 'lights' key to hold array");
     }
     QJsonArray jlights = json["lights"].toArray();
     for (auto obj = jlights.begin(); obj != jlights.end(); obj++) {
         if (!obj->isObject()) {
+            for (auto obj : objects) delete obj;
             throw JsonFormatError("Malformed light");
         }
         lights.push_back(Light(obj->toObject()));

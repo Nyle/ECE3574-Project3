@@ -500,7 +500,9 @@ TEST_CASE("Run Tracer", "[tracer]") {
                                     "\"lambert\": 1,"
                                     "\"type\": \"plane\""
                                     "}]}"));
-    REQUIRE_NOTHROW(trace(&s, 128, 128));
+    Color * c;
+    REQUIRE_NOTHROW(c = trace(&s, 128, 128));
+    delete c;
 }
 
 TEST_CASE("Test Image Normalization", "[image_write]") {

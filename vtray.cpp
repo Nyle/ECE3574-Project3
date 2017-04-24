@@ -13,7 +13,6 @@
 int main(int argc, char * argv[]) {
     std::vector<std::string>  arguments;
     for(int i = 0; i < argc; ++i) arguments.push_back(argv[i]);
-    
     size_t numthreads = 1;
     std::string infile, outfile;
     for (size_t i = 1; i < arguments.size(); i++) {
@@ -30,7 +29,6 @@ int main(int argc, char * argv[]) {
             }
         }
     }
-
     if (arguments.size() != 3) {
         std::cerr << "Error: Malformed command line arguments" << std::endl;
         return EXIT_FAILURE;
@@ -48,10 +46,8 @@ int main(int argc, char * argv[]) {
     size_t h = scene->camera.sizey;
     size_t pixels = w * h;
     Color ** image = new Color*[pixels];
-
     std::atomic<size_t> currentPixel(0);
     std::vector<std::thread*> threads;
-    
     for (size_t i = 0; i < numthreads; i++) {
         std::thread * worker = new std::thread([&] () {
                 size_t pixel;
@@ -63,11 +59,7 @@ int main(int argc, char * argv[]) {
             });
         threads.push_back(worker);
     }
-
-    for (auto thread : threads) {
-        thread->join();
-    }
-    
+    for (auto thread : threads) { thread->join(); }
     normalizeImage(image, w * h);
     outputImage(image, argv[2], w, h);
     return EXIT_SUCCESS;

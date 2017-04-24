@@ -33,7 +33,7 @@ public:
 
 const Vec3D operator*(double d, const Vec3D v);
 
-const Vec3D crossProduct(const Vec3D a, const Vec3D b);
+const Vec3D crossProduct(const Vec3D u, const Vec3D v);
 
 class Ray {
 public:
