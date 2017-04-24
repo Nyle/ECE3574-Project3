@@ -6,6 +6,8 @@
 class Sphere;
 class Plane;
 
+bool approx(double a, double b);
+
 class Vec3D {
 public:
     double x, y, z;
@@ -27,6 +29,8 @@ public:
     double mag2() const;
     // Normalized vector (magnitude of one, same direction)
     const Vec3D norm() const;
+    // Equality operator. True if vectors have same three coordinates
+    bool operator==(const Vec3D v) const;
 };
 
 const Vec3D operator*(double d, const Vec3D v);

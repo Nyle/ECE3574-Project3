@@ -1,6 +1,11 @@
 #include "math.hpp"
 #include <cmath>
+#include <limits>
 #include "scene.hpp"
+
+bool approx(double a, double b) {
+    return a - b < std::numeric_limits<double>::epsilon();
+}
 
 Vec3D::Vec3D() {
     x = y = z = 0;
@@ -34,6 +39,10 @@ double Vec3D::mag2() const {
 
 const Vec3D Vec3D::norm() const {
     return 1/(this->mag()) * *this;
+}
+
+bool Vec3D::operator==(const Vec3D v) const {
+    return approx(x, v.x) && approx(y, v.y) && approx(z, v.z);
 }
 
 const Vec3D operator*(double d, const Vec3D v) {
