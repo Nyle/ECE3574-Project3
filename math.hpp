@@ -3,6 +3,9 @@
 
 #include <cmath>
 
+class Sphere;
+class Plane;
+
 class Vec3D {
 public:
     double x, y, z;
@@ -26,15 +29,17 @@ public:
 
 const Vec3D operator*(double d, const Vec3D v);
 
+const Vec3D crossProduct(const Vec3D a, const Vec3D b);
+
 class Ray {
 public:
     Vec3D start, dir;
 
     // Construct a Ray starting at `from' going through `towards'
     Ray(Vec3D from, Vec3D towards);
+
+    // Point along the ray that is `d' away from `start'
+    Vec3D pointAt(double d);
 };
-
-// const Vec3D intersection(Ray r, Sphere s);
-
 
 #endif // MATH_H

@@ -11,7 +11,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-QJsonDocument strToJsonDocument(std::string str) {
+QJsonDocument _strToJsonDocument(std::string str) {
     QJsonParseError error;
     QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromStdString(str),
                                                 &error);
@@ -20,13 +20,13 @@ QJsonDocument strToJsonDocument(std::string str) {
 }
 
 QJsonObject strToJsonObject(std::string str) {
-    QJsonDocument doc = strToJsonDocument(str);
+    QJsonDocument doc = _strToJsonDocument(str);
     REQUIRE(doc.isObject());
     return doc.object();
 }
 
 QJsonArray strToJsonArray(std::string str) {
-    QJsonDocument doc = strToJsonDocument(str);
+    QJsonDocument doc = _strToJsonDocument(str);
     REQUIRE(doc.isArray());
     return doc.array();
 }

@@ -4,17 +4,7 @@
 class QJsonObject;
 #include <vector>
 #include "math.hpp"
-
-class Color {
-public:
-    unsigned int r, g, b;
-
-    // Constructor from json
-    Color(QJsonObject json);
-
-    // Constructor from values;
-    Color(unsigned int r, unsigned int g, unsigned int b) : r(r), g(g), b(b) {}
-};
+#include "color.hpp"
 
 // Interface for objects in the scene
 class SceneObject {
@@ -24,6 +14,11 @@ public:
     double lambert;
 
     SceneObject(QJsonObject json);
+    // Returns the closest distance to the start of the ray where the ray
+    // intersects the object they do not intersect.
+    virtual double intersect(Ray r) = 0;
+
+    virtual ~SceneObject() = 0;
 };
 
 class Sphere : public SceneObject {
@@ -32,6 +27,8 @@ public:
 
     // Constructor from json
     Sphere(QJsonObject json);
+
+    double intersect(Ray r);
 };
 
 class Plane : public SceneObject {
@@ -39,6 +36,8 @@ public:
     Vec3D normal;
 
     Plane(QJsonObject json);
+
+    double intersect(Ray r);
 };
 
 class Light {
@@ -56,7 +55,7 @@ class Camera {
 public:
     Vec3D center, normal;
     double focus;
-    unsigned int sizex, sizey;
+    size_t sizex, sizey;
     double resolutionx, resolutiony;
 
     Camera(QJsonObject json);
@@ -64,11 +63,14 @@ public:
 
 class Scene {
 public:
-    std::vector<SceneObject> objects;
+    std::vector<SceneObject *> objects;
     std::vector<Light> lights;
     Camera camera;
 
     Scene(QJsonObject json);
+    ~Scene();
 };
+
+Scene * loadSceneFromFile(std::string filename);
 
 #endif // SCENE_HPP

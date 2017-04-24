@@ -15,6 +15,9 @@ find_package(Qt5 COMPONENTS Gui REQUIRED)
 set(src
   scene.hpp scene.cpp
   math.hpp math.cpp
+  image_write.hpp image_write.cpp
+  color.hpp color.cpp
+  tracer.hpp tracer.cpp
   )
 
 # EDIT: add any additional test source files to this list
