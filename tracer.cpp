@@ -10,6 +10,7 @@ Vec3D focusPoint(Camera c) {
 // Gives `vec' rotated around `around' by `theta' radians. See
 // https://en.wikipedia.org/wiki/Rotation_matrix#Rotation_matrix_from_axis_and_angle
 Vec3D rotate(Vec3D vec, Vec3D around, double theta) {
+    around = around.norm();
     return Vec3D(// X
                  (cos(theta) + around.x * around.x * (1 - cos(theta))) * vec.x +
                  (around.x * around.y * (1 - cos(theta)) -
@@ -17,7 +18,7 @@ Vec3D rotate(Vec3D vec, Vec3D around, double theta) {
                  (around.x * around.z * (1 - cos(theta)) +
                   around.y * sin(theta)) * vec.z,
                  // Y
-                 (around.y * around.z * (1 - cos(theta)) +
+                 (around.y * around.x * (1 - cos(theta)) +
                   around.z * sin(theta)) * vec.x + 
                  (cos(theta) + around.y * around.y * (1 - cos(theta))) * vec.y +
                  (around.y * around.z * (1 - cos(theta)) -
@@ -36,17 +37,17 @@ const Vec3D defaultCameraHoriz = Vec3D(1, 0, 0);
 
 // Get the location of the pixel at coordinate (i, j)
 const Vec3D pixelPoint(Camera c, size_t i, size_t j) {
-    Vec3D axis = crossProduct(defaultCameraNormal, c.normal).norm();
-    double angle = acos(defaultCameraNormal.norm() * c.normal.norm());
+    Vec3D rotatedVert = defaultCameraVert;
+    Vec3D rotatedHoriz = defaultCameraHoriz;
+    Vec3D axis = crossProduct(defaultCameraNormal, c.normal);
+    if (axis.mag2() != 0) {
+        double angle = acos(defaultCameraNormal.norm() * c.normal.norm());
+        rotatedVert = rotate(defaultCameraVert, axis, angle);
+        rotatedHoriz = rotate(defaultCameraHoriz, axis, angle);
+    }
 
-    Vec3D rotatedVert = rotate(defaultCameraVert, axis, angle);
-    Vec3D rotatedHoriz = rotate(defaultCameraHoriz, axis, angle);
-
-    // return c.center + (0.5 * c.sizex - i) * c.resolutionx * rotatedHoriz +
-    //     (0.5 * c.sizey - j) * c.resolutiony * rotatedVert;
-
-    return (i - 0.5 * c.sizex) * c.resolutionx * defaultCameraHoriz +
-        (j - 0.5 * c.sizey) * c.resolutiony * defaultCameraVert;
+    return c.center + (i - 0.5 * c.sizex) * c.resolutionx * rotatedHoriz +
+        (j - 0.5 * c.sizey) * c.resolutiony * rotatedVert;
 }
 
 Color trace(Scene * s, size_t i, size_t j) {
