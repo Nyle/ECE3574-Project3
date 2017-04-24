@@ -8,6 +8,7 @@
 #include "scene.hpp"
 #include "tracer.hpp"
 #include "image_write.hpp"
+#include "json_format_error.hpp"
 
 int main(int argc, char * argv[]) {
     std::vector<std::string>  arguments;
@@ -36,7 +37,13 @@ int main(int argc, char * argv[]) {
     }
     infile = arguments[1];
     outfile = arguments[2];
-    Scene * scene = loadSceneFromFile(argv[1]);
+    Scene * scene;
+    try {
+        scene = loadSceneFromFile(argv[1]);
+    } catch (JsonFormatError e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
     size_t w = scene->camera.sizex;
     size_t h = scene->camera.sizey;
     size_t pixels = w * h;
