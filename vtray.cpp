@@ -14,15 +14,13 @@ int main(int argc, char ** argv) {
     }
     Scene * scene = loadSceneFromFile(argv[1]);
     std::vector<Color> image;
-
     for (size_t j = 0; j < scene->camera.sizey; j++) {
         for (size_t i = 0; i < scene->camera.sizex; i++) {
             image.push_back(trace(scene, i, j));
         }
     }
-
+    normalizeImage(image);
     outputImage(image, argv[2], scene->camera.sizex, scene->camera.sizey);
-    
     return EXIT_SUCCESS;
 }
 

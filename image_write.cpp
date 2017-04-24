@@ -21,7 +21,6 @@ void normalizeImage(std::vector<Color> &imageData) {
 
 void outputImage(std::vector<Color> imageData, std::string file,
                  size_t w, size_t h) {
-    normalizeImage(imageData);
     QImage image = QImage(w, h, QImage::Format_RGB32);
     for (size_t i = 0; i < imageData.size(); i++) {
         Color c = imageData[i];

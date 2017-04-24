@@ -5,6 +5,8 @@
 #include <string>
 class Color;
 
+void normalizeImage(std::vector<Color> &imageData);
+
 void outputImage(std::vector<Color> imageData, std::string file,
                  size_t w, size_t h);
 
