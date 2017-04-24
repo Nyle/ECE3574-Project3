@@ -42,4 +42,6 @@ public:
     Vec3D pointAt(double d);
 };
 
+Vec3D rotate(Vec3D vec, Vec3D around, double theta);
+
 #endif // MATH_H
