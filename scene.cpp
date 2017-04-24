@@ -67,25 +67,37 @@ double Sphere::intersect(Ray r) {
 
     double d1 = (-b + sqrt(discriminant)) / (2 * a);
     double d2 = (-b - sqrt(discriminant)) / (2 * a);
-    return fmin(d1 >= 0 ? d1 : std::numeric_limits<double>::infinity(),
-                d2 >= 0 ? d2 : std::numeric_limits<double>::infinity());
+    return fmin(d1 > 0 ? d1 : std::numeric_limits<double>::infinity(),
+                d2 > 0 ? d2 : std::numeric_limits<double>::infinity());
+}
+
+Vec3D Sphere::normalAt(Vec3D point) {
+    return (point - center).norm();
 }
 
 Plane::Plane(QJsonObject json) :
     SceneObject(json),
     normal(vec3DFromJson(json["normal"])) {}
 
+Vec3D Plane::normalAt(Vec3D point) {
+    return normal;
+}
+
 double Plane::intersect(Ray r) {
     // Ray and plane are parallel; no intersection
     if (r.dir * normal == 0) return std::numeric_limits<double>::infinity();
     double res = ((center - r.start) * normal) / (r.dir * normal);
-    return res < 0 ? std::numeric_limits<double>::infinity() : res;
+    return res > 0 ? res : std::numeric_limits<double>::infinity();
 }
 
 
 Light::Light(QJsonObject json) :
     location(vec3DFromJson(json["location"])),
     intensity(getDouble(json["intensity"])) {}
+
+const Vec3D defaultCameraNormal = Vec3D(0, 0, 1);
+const Vec3D defaultCameraVert = Vec3D(0, 1, 0);
+const Vec3D defaultCameraHoriz = Vec3D(1, 0, 0);
 
 Camera::Camera(QJsonObject json) :
     center(vec3DFromJson(json["center"])),
@@ -94,7 +106,18 @@ Camera::Camera(QJsonObject json) :
     sizex(getSizeT(json["size"].toArray()[0])),
     sizey(getSizeT(json["size"].toArray()[1])),
     resolutionx(getDouble(json["resolution"].toArray()[0])),
-    resolutiony(getDouble(json["resolution"].toArray()[1])) {}
+    resolutiony(getDouble(json["resolution"].toArray()[1])),
+    focusPoint(center - normal.norm() * focus) {
+    yDir = defaultCameraVert;
+    xDir = defaultCameraHoriz;
+    Vec3D axis = crossProduct(defaultCameraNormal, normal);
+    if (axis.mag2() != 0) {
+        double angle = acos(defaultCameraNormal.norm() * normal.norm());
+        yDir = rotate(defaultCameraVert, axis, angle);
+        xDir = rotate(defaultCameraHoriz, axis, angle);
+    }
+    
+}
 
 Scene::Scene(QJsonObject json) : camera(Camera(json["camera"].toObject())) {
     // Parse objects

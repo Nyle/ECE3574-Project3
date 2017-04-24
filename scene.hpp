@@ -18,6 +18,10 @@ public:
     // intersects the object they do not intersect.
     virtual double intersect(Ray r) = 0;
 
+    // Returns a vertor normal to the surface of the object at the specified
+    // point. The point should be on the surface of this object
+    virtual Vec3D normalAt(Vec3D point) = 0;
+
     virtual ~SceneObject() = 0;
 };
 
@@ -29,6 +33,7 @@ public:
     Sphere(QJsonObject json);
 
     double intersect(Ray r);
+    Vec3D normalAt(Vec3D point);
 };
 
 class Plane : public SceneObject {
@@ -38,6 +43,7 @@ public:
     Plane(QJsonObject json);
 
     double intersect(Ray r);
+    Vec3D normalAt(Vec3D point);
 };
 
 class Light {
@@ -57,6 +63,8 @@ public:
     double focus;
     size_t sizex, sizey;
     double resolutionx, resolutiony;
+    // Calculated at initialization
+    Vec3D focusPoint, xDir, yDir;
 
     Camera(QJsonObject json);
 };
