@@ -12,8 +12,14 @@ public:
 
     const Color operator*(double d) const;
 
+    const Color operator+=(const Color c);
+
+    const Color operator+(const Color c) const;
+
     size_t max() const;
 };
+
+inline Color operator+(Color lhs, const Color& rhs);
 
 const Color operator*(double d, const Color c);
 
