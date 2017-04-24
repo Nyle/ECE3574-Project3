@@ -37,25 +37,37 @@ void checkIsObject(QJsonValue json) {
 Vec3D vec3DFromJson(QJsonValue json) {
     checkIsObject(json);
     return Vec3D(getDouble(json.toObject()["x"]),
-                  getDouble(json.toObject()["y"]),
-                  getDouble(json.toObject()["z"]));
+                 getDouble(json.toObject()["y"]),
+                 getDouble(json.toObject()["z"]));
 }
 
 Color colorFromJson(QJsonObject json) {
-    return Color(getSizeT(json["r"]),
-                 getSizeT(json["g"]),
-                 getSizeT(json["b"]));
+    size_t r = getSizeT(json["r"]);
+    size_t g = getSizeT(json["g"]);
+    size_t b = getSizeT(json["b"]);
+    if (r > 255 || g > 255 || b > 255) {
+        throw JsonFormatError("Colors must not be greater than 255");
+    }
+    return Color(r, g, b);
 }
 
 SceneObject::SceneObject(QJsonObject json) :
     center(vec3DFromJson(json["center"])),
     color(colorFromJson(json["color"].toObject())),
-    lambert(getDouble(json["lambert"])) {}
+    lambert(getDouble(json["lambert"])) {
+    if (lambert < 0 || lambert > 1) {
+        throw JsonFormatError("Can't have lambert outside of [0, 1]");
+    }
+}
 
 inline SceneObject::~SceneObject() {}
 
 Sphere::Sphere(QJsonObject json) : SceneObject(json),
-                                   radius(getDouble(json["radius"])) {}
+                                   radius(getDouble(json["radius"])) {
+    if (radius < 0) {
+        throw JsonFormatError("Can't have sphere with negative radius");
+    }
+}
 
 double Sphere::intersect(Ray r) {
     double a = r.dir.mag2();
@@ -93,7 +105,11 @@ double Plane::intersect(Ray r) {
 
 Light::Light(QJsonObject json) :
     location(vec3DFromJson(json["location"])),
-    intensity(getDouble(json["intensity"])) {}
+    intensity(getDouble(json["intensity"])) {
+    if (intensity < 0) {
+        throw JsonFormatError("Can't have negative intensity");
+    }
+}
 
 const Vec3D defaultCameraNormal = Vec3D(0, 0, 1);
 const Vec3D defaultCameraVert = Vec3D(0, 1, 0);
@@ -108,6 +124,9 @@ Camera::Camera(QJsonObject json) :
     resolutionx(getDouble(json["resolution"].toArray()[0])),
     resolutiony(getDouble(json["resolution"].toArray()[1])),
     focusPoint(center - normal.norm() * focus) {
+    if (resolutionx < 0 || resolutiony < 0) {
+        throw JsonFormatError("Can't have negative resolution");
+    }
     yDir = defaultCameraVert;
     xDir = defaultCameraHoriz;
     Vec3D axis = crossProduct(defaultCameraNormal, normal);
