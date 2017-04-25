@@ -17,12 +17,11 @@ const Vec3D pixelPoint(Camera c, size_t i, size_t j) {
 void getIntersection(Scene * s, Ray r, SceneObject * & closest,
                      double & closestDistance) {
     closestDistance = std::numeric_limits<double>::infinity();
-    double tmp;
-    
+    double dist;
     for (SceneObject * obj : s->objects) {
-        tmp = obj->intersect(r);
-        if (tmp < closestDistance) {
-            closestDistance = tmp;
+        dist = obj->intersect(r);
+        if (dist < closestDistance) {
+            closestDistance = dist;
             closest = obj;
         }
     }
@@ -53,15 +52,14 @@ Color * trace(Scene * s, size_t i, size_t j) {
     Vec3D intersectionPt = r.pointAt(closestDistance);
     Vec3D intersectionNormal = closest->normalAt(intersectionPt);
 
+    double cameraPlaneIntersectionDist = r.dir * s->camera.normal == 0 ?
+        std::numeric_limits<double>::infinity() :
+        ((s->camera.center - r.start) * s->camera.normal) /
+        (r.dir * s->camera.normal);
+
     for (auto light : s->lights) {
         r = Ray(intersectionPt, light.location);
-        double cameraPlaneIntersectionDist = r.dir * s->camera.normal == 0 ?
-            std::numeric_limits<double>::infinity() :
-            ((s->camera.center - r.start) * s->camera.normal) /
-            (r.dir * s->camera.normal);
-        
         double scale = intersectionNormal * r.dir * closest->lambert;
-
         if (scale >= 0 &&
             // We only care about ones that are between the
             // light and the intersection point, and are also
