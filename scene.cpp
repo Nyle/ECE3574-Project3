@@ -75,9 +75,7 @@ double Sphere::intersect(const Ray &r) {
     double c = (center - r.start).mag2() - radius * radius;
     double discriminant = b * b - 4 * a * c;
 
-    if (discriminant < 0) {
-        return std::numeric_limits<double>::infinity();
-    }
+    if (discriminant < 0) { return std::numeric_limits<double>::infinity(); }
 
     double d1 = (-b + sqrt(discriminant)) / (2 * a);
     double d2 = (-b - sqrt(discriminant)) / (2 * a);
