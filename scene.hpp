@@ -18,11 +18,11 @@ public:
     SceneObject(QJsonObject json);
     // Returns the closest distance to the start of the ray where the ray
     // intersects the object they do not intersect.
-    virtual double intersect(Ray r) = 0;
+    virtual double intersect(const Ray &r) = 0;
 
     // Returns a vertor normal to the surface of the object at the specified
     // point. The point should be on the surface of this object
-    virtual Vec3D normalAt(Vec3D point) = 0;
+    virtual Vec3D normalAt(const Vec3D &point) = 0;
 
     virtual ~SceneObject() = 0;
 };
@@ -34,8 +34,8 @@ public:
     // Constructor from json
     Sphere(QJsonObject json);
 
-    double intersect(Ray r);
-    Vec3D normalAt(Vec3D point);
+    double intersect(const Ray &r);
+    Vec3D normalAt(const Vec3D &point);
 };
 
 class Plane : public SceneObject {
@@ -44,8 +44,8 @@ public:
 
     Plane(QJsonObject json);
 
-    double intersect(Ray r);
-    Vec3D normalAt(Vec3D point);
+    double intersect(const Ray &r);
+    Vec3D normalAt(const Vec3D &point);
 };
 
 class Light {

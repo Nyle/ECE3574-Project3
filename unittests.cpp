@@ -501,7 +501,7 @@ TEST_CASE("Run Tracer", "[tracer]") {
                                     "\"type\": \"plane\""
                                     "}]}"));
     Color * c;
-    REQUIRE_NOTHROW(c = trace(&s, 128, 128));
+    REQUIRE_NOTHROW(c = trace(s, 128, 128));
     delete c;
 }
 

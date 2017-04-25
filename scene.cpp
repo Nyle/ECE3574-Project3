@@ -69,13 +69,15 @@ Sphere::Sphere(QJsonObject json) : SceneObject(json),
     }
 }
 
-double Sphere::intersect(Ray r) {
+double Sphere::intersect(const Ray &r) {
     double a = r.dir.mag2();
     double b = -2 * (center - r.start) * r.dir;
     double c = (center - r.start).mag2() - radius * radius;
     double discriminant = b * b - 4 * a * c;
 
-    if (discriminant < 0) { return std::numeric_limits<double>::infinity(); }
+    if (discriminant < 0) {
+        return std::numeric_limits<double>::infinity();
+    }
 
     double d1 = (-b + sqrt(discriminant)) / (2 * a);
     double d2 = (-b - sqrt(discriminant)) / (2 * a);
@@ -83,7 +85,7 @@ double Sphere::intersect(Ray r) {
                 d2 > 0 ? d2 : std::numeric_limits<double>::infinity());
 }
 
-Vec3D Sphere::normalAt(Vec3D point) {
+Vec3D Sphere::normalAt(const Vec3D &point) {
     return (point - center).norm();
 }
 
@@ -91,11 +93,11 @@ Plane::Plane(QJsonObject json) :
     SceneObject(json),
     normal(vec3DFromJson(json["normal"])) {}
 
-Vec3D Plane::normalAt(Vec3D point) {
+Vec3D Plane::normalAt(const Vec3D &point) {
     return normal;
 }
 
-double Plane::intersect(Ray r) {
+double Plane::intersect(const Ray &r) {
     // Ray and plane are parallel; no intersection
     if (r.dir * normal == 0) { return std::numeric_limits<double>::infinity(); }
     double res = ((center - r.start) * normal) / (r.dir * normal);

@@ -54,7 +54,7 @@ int main(int argc, char * argv[]) {
                 while (true) {
                     pixel = currentPixel++;
                     if (pixel >= pixels) return;
-                    image[pixel] = trace(scene, pixel % w, pixel / w);
+                    image[pixel] = trace(*scene, pixel % w, pixel / w);
                 }
             });
         threads.push_back(worker);
